@@ -40,7 +40,6 @@ def deezer_login():
     url = f'https://api.deezer.com/user/me/history?access_token={access_token}'
     response = requests.get(url)
     history = response.json()
-    print(len(history['data']))
     return history
 
 if __name__ == '__main__':
