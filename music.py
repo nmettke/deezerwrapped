@@ -7,12 +7,9 @@ app = Flask(__name__)
 
 config = dotenv_values(".env")
 
-print(config)
-
 DEEZER_APP_ID = config["DEEZER_APP_ID"]
 DEEZER_APP_SECRET = config["DEEZER_APP_SECRET"]
 DEEZER_REDIRECT_URI = "http://127.0.0.1:5000/deezer/login"
-
 
 @app.route('/', methods=['GET'])
 def default():
