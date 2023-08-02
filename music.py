@@ -5,7 +5,26 @@ import json
 import time
 
 
+class MyData:
+    def __init__(self):
+        self.history = []
+        self.access_token = ""
+        self.artist_freq = {}
+        self.genre_freq = {}
+
+    def process_results(self):
+        for song in self.history:
+            name = song['artist']['name']
+            if name in self.artist_freq:
+                self.artist_freq[name] += 1
+            else:
+                self.artist_freq[name] = 1
+        print(self.artist_freq)
+        return self.artist_freq
+
+
 app = Flask(__name__)
+data = MyData()  # Create a shared state object
 
 config = dotenv_values(".env")
 
@@ -30,21 +49,27 @@ def deezer_login():
     if response.text == 'wrong code':
         return 'wrong code'
     
-    access_token = response.json()['access_token']
+    data.access_token = response.json()['access_token']
     
-    history = []
-    for i in range(20):
-        url = f'https://api.deezer.com/user/me/history?access_token={access_token}&index={i * 50}'
-        response = requests.get(url)
-        data = response.json()
-        if 'data' in data:
-            print("Received ", len(data['data']), " items")
-            history += data['data']
-        time.sleep(.5)
+    url = f'https://api.deezer.com/user/me/tracks?access_token={data.access_token}'
+    res_data = requests.get(url).json()
+    data.history = res_data['data']
+    i = 1
+    while len(res_data['data']) != 0:
+        url = f'https://api.deezer.com/user/me/tracks?access_token={data.access_token}&index={i * 25}'
+        res_data = requests.get(url).json()
+        if 'data' in res_data:
+            print("Received ", len(res_data['data']), " items")
+            data.history += res_data['data']
+            i += 1
     with open("history_json", 'w') as f:
-        json.dump(history, f)
-    print("length of history: ", len(history))
-    return history
+        json.dump(data.history, f)
+    print("length of history: ", len(data.history))
+    return redirect("/results")
+
+@app.route('/results')
+def results():
+    return data.process_results()
 
 if __name__ == '__main__':
     app.run()
