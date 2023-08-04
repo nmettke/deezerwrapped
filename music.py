@@ -12,33 +12,43 @@ class MyData:
         self.artist_freq = {}
         self.genre_freq = {}
         self.name = ""
+        self.artist_sorted = []
+        self.genre_sorted = []
 
     def process_results(self):
         x1 = time.time()
         for song in self.history:
             artist_id = song['artist']['id']
-            album_id = song['album']['id']
-            if artist_id in self.artist_freq:
-                self.artist_freq[artist_id] += 1
+            artist_name = song['artist']['name']
+            artist_tuple = (artist_id, artist_name)
+            if artist_tuple in self.artist_freq:
+                self.artist_freq[artist_tuple] += 1
             else:
-                self.artist_freq[artist_id] = 1
-
+                self.artist_freq[artist_tuple] = 1
+            
+            album_id = song['album']['id']
             url = f'https://api.deezer.com/album/{album_id}?access_token={data.access_token}'
             res_data = requests.get(url).json()
             if 'genres' in res_data and 'data' in res_data['genres']:
                 for genre in res_data['genres']['data']:
-                    genre_name = genre['id']
-                    if genre_name in self.genre_freq:
-                        self.genre_freq[genre_name] += 1
+                    genre_id = genre['id']
+                    genre_name = genre['name']
+                    genre_tuple = (genre_id, genre_name)
+                    if genre_tuple in self.genre_freq:
+                        self.genre_freq[genre_tuple] += 1
                     else:
-                        self.genre_freq[genre_name] = 1
+                        self.genre_freq[genre_tuple] = 1
         x2 = time.time()
+
+        self.artist_sorted = sorted(self.artist_freq.items(), key=lambda x:x[1], reverse=True)
+        self.genre_sorted = sorted(self.genre_freq.items(), key=lambda x:x[1], reverse=True)
+
         print("time taken to process results: ", x2 - x1)
     
     def fetch_results(self):
-        if len(self.artist_freq) == 0 or len(self.genre_freq) == 0:
+        if len(self.genre_sorted) == 0 or len(self.artist_sorted) == 0:
             self.process_results()
-        return self.artist_freq, self.genre_freq
+        return self.artist_sorted, self.genre_sorted
 
 
 app = Flask(__name__)
@@ -87,11 +97,11 @@ def deezer_login():
 
 @app.route('/results')
 def results():
-    artist_freq, genre_freq = data.fetch_results()
-    url = f'https://api.deezer.com/user/me/name?access_token={data.access_token}'
+    artist_sorted, genre_sorted = data.fetch_results()
+    url = f'https://api.deezer.com/user/me?access_token={data.access_token}'
     res_data = requests.get(url).json()
     name = res_data['name']
-    return render_template('results.html', artist_freq=artist_freq, genre_freq=genre_freq, name=name)
+    return render_template('results.html', artist_sorted=artist_sorted, genre_sorted=genre_sorted, name=name)
 
 if __name__ == '__main__':
     app.run()

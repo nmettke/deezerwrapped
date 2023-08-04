@@ -1,23 +1,38 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Hi {{name}}, this is your Deezer Wrapped!</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-  </head>
-  <body class="bg-gray-100 text-gray-900 font-sans">
-    <div class="container mx-auto p-6">
-      <h1 class="text-4xl font-bold mb-4">Artist Frequencies</h1>
-      <ul class="list-disc pl-5">
-        {% for artist, freq in artist_freq.items() %}
-          <li class="mb-2">{{ artist }}: <span class="font-bold">{{ freq }}</span></li>
-        {% endfor %}
-      </ul>
-      <h1 class="text-4xl font-bold mt-8 mb-4">Genre Frequencies</h1>
-      <ul class="list-disc pl-5">
-        {% for genre, freq in genre_freq.items() %}
-          <li class="mb-2">{{ genre }}: <span class="font-bold">{{ freq }}</span></li>
-        {% endfor %}
-      </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music History Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-200 p-10">
+    <div class="container mx-auto">
+        <h1 class="text-4xl font-bold mb-4">Hello {{ name }}, here are your Deezer music history results:</h1>
+        <div class="grid grid-cols-2 gap-10">
+            <div>
+                <h2 class="text-2xl font-bold mb-2">Top Artists</h2>
+                <ul>
+                    {% for artist in artist_sorted %}
+                    <li class="bg-white p-2 rounded shadow mb-2">
+                        <h3 class="text-lg font-bold">{{ artist[0][1] }}</h3>
+                        <p>{{ artist[1] }} listens</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold mb-2">Top Genres</h2>
+                <ul>
+                    {% for genre in genre_sorted %}
+                    <li class="bg-white p-2 rounded shadow mb-2">
+                        <h3 class="text-lg font-bold">{{ genre[0][1] }}</h3>
+                        <p>{{ genre[1] }} listens</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
-  </body>
+</body>
 </html>
