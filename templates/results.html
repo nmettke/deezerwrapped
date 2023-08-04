@@ -1,20 +1,20 @@
 <!doctype html>
 <html>
   <head>
-    <title>Hi {{name}}, this is your Deezer Wrapped!</title>
+    <title>Deezer Wrapped</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
   </head>
   <body class="bg-gray-100 text-gray-900 font-sans">
     <div class="container mx-auto p-6">
       <h1 class="text-4xl font-bold mb-4">Artist Frequencies</h1>
       <ul class="list-disc pl-5">
-        {% for artist, freq in artist_freq.items() %}
+        {% for artist, freq in artist_sorted.items() %}
           <li class="mb-2">{{ artist }}: <span class="font-bold">{{ freq }}</span></li>
         {% endfor %}
       </ul>
       <h1 class="text-4xl font-bold mt-8 mb-4">Genre Frequencies</h1>
       <ul class="list-disc pl-5">
-        {% for genre, freq in genre_freq.items() %}
+        {% for genre, freq in genre_sorted.items() %}
           <li class="mb-2">{{ genre }}: <span class="font-bold">{{ freq }}</span></li>
         {% endfor %}
       </ul>
