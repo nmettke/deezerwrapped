@@ -40,8 +40,8 @@ class MyData:
                         self.genre_freq[genre_tuple] = 1
         x2 = time.time()
 
-        self.artist_sorted = sorted(self.artist_freq.items(), key=lambda x:x[1])
-        self.genre_sorted = sorted(self.genre_freq.items(), key=lambda x:x[1])
+        self.artist_sorted = sorted(self.artist_freq.items(), key=lambda x:x[1], reverse=True)
+        self.genre_sorted = sorted(self.genre_freq.items(), key=lambda x:x[1], reverse=True)
 
         print("time taken to process results: ", x2 - x1)
     
@@ -52,7 +52,7 @@ class MyData:
 
 
 app = Flask(__name__)
-data = MyData()  # Create a shared state object
+data = MyData() 
 
 config = dotenv_values(".env")
 
@@ -90,8 +90,6 @@ def deezer_login():
             print("Received ", len(res_data['data']), " items")
             data.history += res_data['data']
             i += 1
-    """ with open("history_json", 'w') as f:
-        json.dump(data.history, f) """
     print("length of history: ", len(data.history))
     return redirect("/results")
 
