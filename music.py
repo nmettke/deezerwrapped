@@ -14,8 +14,6 @@ class MyData:
         self.name = ""
         self.artist_sorted = []
         self.genre_sorted = []
-        self.artist_sorted = []
-        self.genre_sorted = []
 
     def process_results(self):
         x1 = time.time()
@@ -25,15 +23,8 @@ class MyData:
             artist_tuple = (artist_id, artist_name)
             if artist_tuple in self.artist_freq:
                 self.artist_freq[artist_tuple] += 1
-            artist_name = song['artist']['name']
-            artist_tuple = (artist_id, artist_name)
-            if artist_tuple in self.artist_freq:
-                self.artist_freq[artist_tuple] += 1
             else:
                 self.artist_freq[artist_tuple] = 1
-            
-            album_id = song['album']['id']
-            self.artist_freq[artist_tuple] = 1
             
             album_id = song['album']['id']
             url = f'https://api.deezer.com/album/{album_id}?access_token={data.access_token}'
@@ -45,18 +36,12 @@ class MyData:
                     genre_tuple = (genre_id, genre_name)
                     if genre_tuple in self.genre_freq:
                         self.genre_freq[genre_tuple] += 1
-                    genre_id = genre['id']
-                    genre_name = genre['name']
-                    genre_tuple = (genre_id, genre_name)
-                    if genre_tuple in self.genre_freq:
-                        self.genre_freq[genre_tuple] += 1
                     else:
-                        self.genre_freq[genre_tuple] = 1
                         self.genre_freq[genre_tuple] = 1
         x2 = time.time()
 
-        self.artist_sorted = sorted(self.artist_freq.items(), key=lambda x:x[1], reverse=True)
-        self.genre_sorted = sorted(self.genre_freq.items(), key=lambda x:x[1], reverse=True)
+        self.artist_sorted = sorted(self.artist_freq.items(), key=lambda x:x[1])
+        self.genre_sorted = sorted(self.genre_freq.items(), key=lambda x:x[1])
 
         print("time taken to process results: ", x2 - x1)
     
@@ -64,6 +49,7 @@ class MyData:
         if len(self.genre_sorted) == 0 or len(self.artist_sorted) == 0:
             self.process_results()
         return self.artist_sorted, self.genre_sorted
+
 
 app = Flask(__name__)
 data = MyData()  # Create a shared state object
@@ -113,11 +99,8 @@ def deezer_login():
 def results():
     artist_sorted, genre_sorted = data.fetch_results()
     url = f'https://api.deezer.com/user/me?access_token={data.access_token}'
-    artist_sorted, genre_sorted = data.fetch_results()
-    url = f'https://api.deezer.com/user/me?access_token={data.access_token}'
     res_data = requests.get(url).json()
     name = res_data['name']
-    return render_template('results.html', artist_sorted=artist_sorted, genre_sorted=genre_sorted, name=name)
     return render_template('results.html', artist_sorted=artist_sorted, genre_sorted=genre_sorted, name=name)
 
 if __name__ == '__main__':
