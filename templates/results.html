@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hi {{name}}, this is your Deezer Wrapped!</title>
+  </head>
+  <body>
+    <h1>Artist Frequencies</h1>
+    <ul>
+      {% for artist, freq in artist_freq.items() %}
+        <li>{{ artist }}: {{ freq }}</li>
+      {% endfor %}
+    </ul>
+    <h1>Genre Frequencies</h1>
+    <ul>
+      {% for genre, freq in genre_freq.items() %}
+        <li>{{ genre }}: {{ freq }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
