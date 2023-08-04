@@ -2,3 +2,6 @@
 __pycache__/
 *.log
 .vscode
+history_json.txt
+node_modules/
+*.json
