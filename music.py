@@ -80,8 +80,8 @@ def deezer_login():
             print("Received ", len(res_data['data']), " items")
             data.history += res_data['data']
             i += 1
-    with open("history_json", 'w') as f:
-        json.dump(data.history, f)
+    """ with open("history_json", 'w') as f:
+        json.dump(data.history, f) """
     print("length of history: ", len(data.history))
     return redirect("/results")
 
