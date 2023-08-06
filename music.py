@@ -21,7 +21,7 @@ class MyData:
         for song in self.history:
             artist_id = song['artist']['id']
             artist_name = song['artist']['name']
-            artist_picture = song['artist']['picture']  # Fetch picture URL
+            artist_picture = song['artist'].get("picture_big", "https://via.placeholder.com/500")
             artist_tuple = (artist_id, artist_name, artist_picture)
             if artist_tuple in self.artist_freq:
                 self.artist_freq[artist_tuple] += 1
@@ -35,7 +35,7 @@ class MyData:
                 for genre in res_data['genres']['data']:
                     genre_id = genre['id']
                     genre_name = genre['name']
-                    genre_picture = genre['picture']  # Fetch picture URL
+                    genre_picture = genre.get("picture", "https://via.placeholder.com/500")
                     genre_tuple = (genre_id, genre_name, genre_picture)
                     if genre_tuple in self.genre_freq:
                         self.genre_freq[genre_tuple] += 1
